@@ -77,6 +77,8 @@ pub const UI_COMMANDS: &[(&str, &str, &[&str], Option<&str>)] = &[
     ("help.discord", "Join the ArtCraft Discord…", &["Help"], None),
     ("help.website", "PhotoCraft Website", &["Help"], None),
     ("help.artcraftWebsite", "ArtCraft Website", &["Help"], None),
+    #[cfg(not(target_arch = "wasm32"))]
+    ("ui.generationApi", "Configure Generation API…", &["Filter", "AI Tools"], None),
     ("help.github", "PhotoCraft on GitHub", &["Help"], None),
     ("help.reportIssue", "Report an Issue…", &["Help"], None),
     ("help.systemInfo", "System Info…", &["Help"], None),
@@ -140,6 +142,18 @@ pub fn invoke(app: &mut PhotocraftApp, ctx: &egui::Context, id: &str, params: Va
 
 /// [`invoke`] without the unsaved-changes prompt, for once the user has already answered it.
 pub(crate) fn invoke_unguarded(app: &mut PhotocraftApp, ctx: &egui::Context, id: &str, params: Value) -> Result<Value, String> {
+    #[cfg(not(target_arch = "wasm32"))]
+    if id == "ui.generationApi" {
+        crate::ai_settings::open(ctx);
+        return Ok(json!({"opened":true}));
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    let params = if matches!(id, "ai.installBackgroundModel") && params.as_object().is_none_or(|p| p.is_empty()) { json!({"download":true}) } else { params };
+    #[cfg(not(target_arch = "wasm32"))]
+    if matches!(id, "ai.removeBackground" | "ai.generativeFill") && params.as_object().is_none_or(|p| p.is_empty()) {
+        return Ok(json!({"dialog": crate::filter_dialog::open(app, id)}));
+    }
     if id == "ui.symmetryTransform" {
         return crate::symmetry_ui::begin(app).map(|_| Value::Null);
     }

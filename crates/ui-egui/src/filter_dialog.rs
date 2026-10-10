@@ -372,6 +372,21 @@ fn uses_logarithmic_slider(min: f32, max: f32) -> bool {
 pub fn body(ui: &mut egui::Ui, f: &mut Map<String, Value>) {
     let t = Tokens::get(ui.ctx());
     let cmd = f.get("__command").and_then(Value::as_str).unwrap_or_default().to_string();
+    if cmd == "ai.generativeFill" {
+        ui.label(tl!("Only this generation crop and its mask are sent to your selected API. The result is added as a new layer."));
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            let config = photocraft_ml::api::config();
+            ui.label(format!("{} · {}", config.endpoint, config.model));
+            if ui.button(tl!("Configure Generation API…")).clicked() {
+                crate::ai_settings::open(ui.ctx());
+            }
+        }
+        ui.add_space(8.0);
+    } else if cmd == "ai.removeBackground" {
+        ui.label(tl!("Install the background model from Filter > AI Tools first. Processing stays on this computer."));
+        ui.add_space(8.0);
+    }
     // Plug-in dialogs carry their own spec (from the plug-in's manifest).
     let spec = match f.get("__spec").and_then(Value::as_str) {
         Some(s) => s.to_string(),

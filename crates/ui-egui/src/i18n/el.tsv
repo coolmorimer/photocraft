@@ -3514,3 +3514,23 @@ fontWeight	Thin	Πολύ λεπτά
 	Quick Selection found nothing there	Η Γρήγορη επιλογή δεν βρήκε τίποτα εκεί
 	Object Selection found nothing there — try a tighter rectangle	Η Επιλογή αντικειμένου δεν βρήκε τίποτα εκεί — δοκιμάστε ένα πιο στενό ορθογώνιο
 	No subject found — try a rectangle around the object	Δεν βρέθηκε θέμα — δοκιμάστε ένα ορθογώνιο γύρω από το αντικείμενο
+
+# Additional RU-fork AI tools: English fallback until translated.
+	AI Tools	AI Tools
+	Install Background Model	Install Background Model
+	AI Remove Background	AI Remove Background
+	Generative Fill…	Generative Fill…
+	Generative Fill	Generative Fill
+	Replace Mask	Replace Mask
+	Prompt	Prompt
+	Port	Port
+	Steps	Steps
+	Install the background model from Filter > AI Tools first. Processing stays on this computer.	Install the background model from Filter > AI Tools first. Processing stays on this computer.
+	Downloading background model (5 MB)	Downloading background model (5 MB)
+	Preparing image	Preparing image
+	Finding subject locally	Finding subject locally
+	Creating layer mask	Creating layer mask
+	Preparing selected area	Preparing selected area
+	Configure Generation API…	Configure Generation API…
+	Only this generation crop and its mask are sent to your selected API. The result is added as a new layer.	Only this generation crop and its mask are sent to your selected API. The result is added as a new layer.
+	Generating with your selected API	Generating with your selected API

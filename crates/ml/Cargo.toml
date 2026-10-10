@@ -1,0 +1,23 @@
+[package]
+name = "photocraft-ml"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+image = { workspace = true, features = ["png", "jpeg", "webp"] }
+serde_json.workspace = true
+base64 = "0.22"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tract-onnx = "0.22"
+anyhow = "1"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls", "multipart"] }
+sha2 = "0.10"
+directories = "6"
+keyring = "4.2"
+serde = { workspace = true }
+tokio = { version = "1", features = ["rt", "time", "macros"] }

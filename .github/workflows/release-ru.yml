@@ -1,0 +1,80 @@
+name: Русская сборка
+on:
+  workflow_dispatch:
+  push:
+    tags: ['ru-v*']
+permissions:
+  contents: read
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_BUILD_JOBS: 4
+  PHOTOCRAFT_DEFAULT_LANGUAGE: ru
+  PHOTOCRAFT_CONFIG_NAME: PhotoCraft-RU
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Проверка AI
+        run: cargo test --locked -p photocraft-ml
+      - name: Сборка
+        run: cargo build --locked --release -p photocraft -p photocraft-cli
+      - name: Установщик
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" packaging/windows/installer-ru.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Compress-Archive -Path target/release/photocraft.exe,target/release/photocraft-cli.exe,LICENSE-MIT,LICENSE-APACHE,NOTICE,ATTRIBUTION.md,docs/ru/INSTALL.txt -DestinationPath dist/ru/PhotoCraft-RU-windows-x64-portable.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PhotoCraft-RU-windows-x64
+          path: dist/ru/*
+          if-no-files-found: error
+  unix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-x64
+          - os: macos-15
+            platform: macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Системные зависимости Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libx11-dev libxi-dev libxrandr-dev libxcursor-dev libxinerama-dev libxkbcommon-dev libwayland-dev libgl1-mesa-dev libfontconfig1-dev
+      - name: Проверка AI и сборка
+        run: |
+          cargo test --locked -p photocraft-ml
+          cargo build --locked --release -p photocraft -p photocraft-cli
+          mkdir -p dist/ru
+          tar -czf dist/ru/PhotoCraft-RU-${{ matrix.platform }}.tar.gz -C target/release photocraft photocraft-cli -C ../.. LICENSE-MIT LICENSE-APACHE NOTICE ATTRIBUTION.md docs/ru/INSTALL.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PhotoCraft-RU-${{ matrix.platform }}
+          path: dist/ru/*
+          if-no-files-found: error
+  publish:
+    if: startsWith(github.ref, 'refs/tags/ru-v')
+    needs: [windows, unix]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Контрольные суммы
+        run: cd artifacts && sha256sum * > SHA256SUMS.txt
+      - name: Публикация
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" artifacts/* --repo "$GITHUB_REPOSITORY" --title 'PhotoCraft RU — локальные ИИ-инструменты' --notes 'Независимая русская сборка. Удаление фона работает локально. Только генерация использует API выбранного пользователем провайдера и его ключ. Модель удаления фона устанавливается отдельно через меню ИИ-инструменты.' --prerelease

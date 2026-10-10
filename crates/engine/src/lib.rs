@@ -10,6 +10,8 @@
 pub mod actions_cmds;
 pub mod adjust_cmds;
 pub mod adjust_params;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod ai_cmds;
 pub mod align_cmds;
 pub mod analysis_cmds;
 pub mod artboard_cmds;

@@ -19,6 +19,8 @@ pub mod adjust_dialog;
 pub mod adjust_editors;
 pub mod adjust_preview;
 pub mod adjust_ui;
+#[cfg(not(target_arch = "wasm32"))]
+mod ai_settings;
 mod alt_grab;
 pub mod analysis_ui;
 pub mod artboard_ui;
@@ -1374,6 +1376,8 @@ impl eframe::App for PhotocraftApp {
         workspace_ui::windows(self, &ctx);
         palette::show(self, &ctx);
         dialogs::show(self, &ctx);
+        #[cfg(not(target_arch = "wasm32"))]
+        ai_settings::show(&ctx);
         jobs_ui::dialog(self, &ctx);
         discard_ui::show(self, &ctx);
         tiff_options_ui::show(self, &ctx);

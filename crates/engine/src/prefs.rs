@@ -256,7 +256,7 @@ impl Default for Interface {
             canvas_custom_color: "#282828".into(),
             canvas_border: CanvasBorder::DropShadow,
             ui_scale: UiScale::Auto,
-            language: "auto".into(),
+            language: option_env!("PHOTOCRAFT_DEFAULT_LANGUAGE").unwrap_or("auto").into(),
             ui_font_size: UiFontSize::Small,
             show_channels_in_color: false,
             dynamic_color_sliders: true,

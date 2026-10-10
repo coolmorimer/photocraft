@@ -2984,3 +2984,23 @@ fontWeight	Italic	기울임
 	Quick Selection found nothing there	빠른 선택으로 해당 위치에서 아무것도 찾지 못했습니다
 	Object Selection found nothing there — try a tighter rectangle	개체 선택으로 해당 위치에서 아무것도 찾지 못했습니다 — 더 좁은 사각형을 사용해 보세요
 	No subject found — try a rectangle around the object	피사체를 찾을 수 없습니다 — 개체 주위에 사각형을 그려 보세요
+
+# Additional RU-fork AI tools: English fallback until translated.
+	AI Tools	AI Tools
+	Install Background Model	Install Background Model
+	AI Remove Background	AI Remove Background
+	Generative Fill…	Generative Fill…
+	Generative Fill	Generative Fill
+	Replace Mask	Replace Mask
+	Prompt	Prompt
+	Port	Port
+	Steps	Steps
+	Install the background model from Filter > AI Tools first. Processing stays on this computer.	Install the background model from Filter > AI Tools first. Processing stays on this computer.
+	Downloading background model (5 MB)	Downloading background model (5 MB)
+	Preparing image	Preparing image
+	Finding subject locally	Finding subject locally
+	Creating layer mask	Creating layer mask
+	Preparing selected area	Preparing selected area
+	Configure Generation API…	Configure Generation API…
+	Only this generation crop and its mask are sent to your selected API. The result is added as a new layer.	Only this generation crop and its mask are sent to your selected API. The result is added as a new layer.
+	Generating with your selected API	Generating with your selected API
